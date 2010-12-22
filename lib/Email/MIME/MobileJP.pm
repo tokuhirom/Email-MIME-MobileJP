@@ -4,85 +4,6 @@ use warnings;
 use 5.008001;
 our $VERSION = '0.01';
 
-use Email::MIME;
-use Email::Address::JP::Mobile;
-use Email::Address::Loose -override;
-use Encode::MIME::Header::ISO_2022_JP;
-
-sub new {
-    my $class = shift;
-    my $mail = Email::MIME->new(@_);
-    bless { mail => $mail }, $class;
-}
-
-sub mail { shift->{mail} }
-
-sub subject {
-    my $self = shift;
-    my $carrier = $self->carrier;
-    return $carrier && $carrier->is_mobile ? $carrier->mime_encoding->decode($self->mail->header_obj->header_raw('Subject')) : $self->mail->header('Subject');
-}
-
-sub header_raw {
-    my $self = shift;
-    $self->mail->header_obj->header_raw(@_);
-}
-
-sub from {
-    my $self = shift;
-
-    my @addr;
-    for my $from ($self->mail->header('From')) {
-        push @addr, Email::Address::Loose->new($from);
-    }
-    return @addr;
-}
-
-sub to {
-    my $self = shift;
-
-    my @addr;
-    for my $to ($self->mail->header('To')) {
-        push @addr, Email::Address::Loose->new($to);
-    }
-    return @addr;
-}
-
-sub carrier {
-    my ($self, ) = @_;
-    my $from = $self->mail->header('From');
-    Carp::croak("Missing 'From' field in headers") unless $from;
-    return $self->{__jpmobile_from} ||= Email::Address::JP::Mobile->new($from);
-}
-
-sub get_texts {
-    my ($self, $content_type) = @_;
-    $content_type ||= qr{^text/plain};
-
-    if ($self->carrier->is_mobile) {
-        my $encoding = $self->carrier->parse_encoding;
-        return map { $encoding->decode($_->body) } $self->get_parts($content_type);
-    } else {
-        return map { $_->body_str } $self->get_parts($content_type);
-    }
-}
-
-sub get_parts {
-    my ($self, $content_type) = @_;
-    Carp::croak("missing content-type") unless defined $content_type;
-
-    my @parts;
-    $self->mail->walk_parts(sub {
-        my $part = shift;
-        return if $part->parts > 1; # multipart
-
-        if ($part->content_type =~ $content_type) {
-            push @parts, $part;
-        }
-    });
-    return @parts;
-}
-
 
 1;
 __END__
@@ -99,7 +20,122 @@ Email::MIME::MobileJP - E-mail toolkit for Japanese Mobile Phones
 
 =head1 DESCRIPTION
 
-Email::MIME::MobileJP is
+Email::MIME::MobileJP is all in one E-mail toolkit for Japanese mobile phones.
+
+これは、Email::MIME シリーズ、および、mobile 関係のモジュールをとりまとめて、カジュアルにつかえるようにするためのモジュールです。
+
+E-mail まわりの処理をやるためのノウハウをまとめておけば、後々、お気楽にできるはずということです。
+
+=head1 クックブック
+
+=head2 メールの受信(Parsing)
+
+メールのパーズは、以下のように、メールの文字列をくわせてやればいいです。
+
+    use Email::MIME::JPMobile::Parser;
+
+    my $src_text = do { local $/; <> };
+    my $mail = Email::MIME::JPMobile::Parser->new($src_text);
+
+メールオブジェクトから Subject をえるには以下のようにしましょう。
+ここでとれるものは MIME ヘッダにはいっている情報をもとに、utf-8 に decode された文字列です。
+可能ならば絵文字も decode します。これには L<Encode::JP::Mobile> を利用しています。
+
+    my $subject = $mail->subject(); # サブジェクトをえる
+
+From をえるには以下のようにします。各要素は L<Email::Address::Loose> のインスタンスです。
+
+    my ($from) = $mail->from();
+
+To も同様です。
+
+    my ($to) = $mail->to();
+
+=head3 text part をえる
+
+text/plain な part をすべてえたい場合には以下のようにします。返り値は、utf-8 decode された、文字列の配列です。
+
+    my @texts = $mail->get_texts();
+
+text/html なパートのみがほしい場合には以下のようにします。
+
+    my @texts = $mail->get_texts(qr{^text/html});
+
+=head3 画像 part をえる
+
+以下のように、get_parts というメソッドであつめましょう。@images の各要素は、パートをあらわす Email::MIME のインスタンスです。
+
+    my $mail = Email::MIME::JPMobile->new($src);
+    my @images = $mail->get_parts(qr{^image/jpeg});;
+
+=head3 SPFの確認
+
+SPF で、本当にケータイからおくられてるかとかチェックできますが、softbank の SPF がくさってるって nekokak がいってたので、あんまり役にたたないかもしれない。@masason どうにかしてください。詳細は以下のサイトをみてください。
+
+http://blog.nekokak.org/show?guid=Vl8eRFxp3xGW08LZob1Swg
+
+=head2 メールの送信
+
+=head3 メールオブジェクトを作成する
+
+Email::MIME::MobileJP::Creator をつかえば、簡単にメールオブジェクトを作成できます。
+
+    use utf8;
+    use Email::MIME::MobileJP::Creator;
+    use Email::Send;
+
+    my $to = 'example@ezweb.ne.jp';
+    my $creator = Email::MIME::MobileJP::Creator->new($to);
+       $creator->body('元気でやってるかー?');
+       $creator->from('from@example.com');
+       $creator->subject('コンニチワ');
+    my $mail = $creator->finalize();
+
+    # Email::Send で送信する
+    my $sender = Email::Send->new({mailer => 'Sendmail'});
+    $sender->send($mail);
+
+=head3 添付したい場合
+
+マルチパートで写真などを添付したい場合には以下のようにすればよいでしょう。
+
+    use utf8;
+    use Email::MIME::MobileJP::Creator;
+
+    my $to = 'example@ezweb.ne.jp';
+    my $creator = Email::MIME::MobileJP::Creator->new($to);
+       $creator->from('from@example.com');
+       $creator->subject('コンニチワ');
+       $creator->add_text_part('元気でやってるかー?');
+       $creator->add_part(
+            $photo => {
+                    'fimename'     => 'hoge.jpg',
+                    'content_type' => 'image/jpeg',
+                    'encoding'     => 'base64',
+                    'name'         => 'sample.jpg',
+            },
+       );
+    my $mail = $creator->finalize;
+
+    # Email::Send で送信する
+    my $sender = Email::Send->new({mailer => 'Sendmail'});
+    $sender->send($mail);
+
+=head3 Email::MIME::JPMobile::Template のやつをつかうパターン
+
+    my $mail_maker = Email::MIME::JPMobile::Template->new('Text::Xslate' => {path => ['email_tmpl/']});
+    my $mail = $mail_maker->render('signup.eml', {token => $token, syntax => 'TTerse'});
+    my $sender = Email::Send->new({mailer => 'Sendmail'});
+    $sender->send($mail);
+
+ただしここで email_tmpl/signup.eml の中身は、以下のとおり。
+
+    Subject: [Example] サインアップ!
+
+    以下をクリックせよ
+    http://example.com/signup/[% token %]
+
+こういうテンプレをおいておけば、簡単にメールを送信できるのでたいへんべんりですね。
 
 =head1 AUTHOR
 

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use utf8;
 use Test::More;
-use Email::MIME::MobileJP;
+use Email::MIME::MobileJP::Parser;
 use Email::MIME;
 use Encode;
 use MIME::Base64;
@@ -22,7 +22,7 @@ subtest 'single part' => sub {
         body => encode( 'iso-2022-jp', '元気でやってるかー?' ),
     );
 
-    my $mail = Email::MIME::MobileJP->new($src->as_string);
+    my $mail = Email::MIME::MobileJP::Parser->new($src->as_string);
 
     subtest 'subject' => sub {
         is $mail->subject(), 'コンニチワ';
@@ -71,7 +71,7 @@ subtest 'multi part' => sub {
     );
     note $src->as_string;
 
-    my $mail = Email::MIME::MobileJP->new($src->as_string);
+    my $mail = Email::MIME::MobileJP::Parser->new($src->as_string);
 
     subtest 'get_texts' => sub {
         my @texts = $mail->get_texts();
@@ -103,7 +103,7 @@ subtest 'UTF-8 mail from PC' => sub {
         body => encode( 'utf-8', '元気でやってるかー?' ),
     );
 
-    my $mail = Email::MIME::MobileJP->new($src->as_string);
+    my $mail = Email::MIME::MobileJP::Parser->new($src->as_string);
 
     is $mail->subject(), 'コンニチワ';
 
