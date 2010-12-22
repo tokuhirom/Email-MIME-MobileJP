@@ -15,15 +15,6 @@ sub new {
     bless { mail => $mail }, $class;
 }
 
-BEGIN {
-    no strict 'refs';
-    for my $meth (qw/walk_parts header_obj header_set header/) {
-        *{__PACKAGE__ . "::$meth"} = sub {
-            shift->mail->$meth(@_)
-        }
-    }
-}
-
 sub mail { shift->{mail} }
 
 sub subject {
@@ -59,7 +50,7 @@ sub to {
 
 sub carrier {
     my ($self, ) = @_;
-    my $from = $self->header('From');
+    my $from = $self->mail->header('From');
     Carp::croak("Missing 'From' field in headers") unless $from;
     return $self->{__jpmobile_from} ||= Email::Address::JP::Mobile->new($from);
 }

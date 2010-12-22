@@ -15,12 +15,11 @@ sub new {
 }
 
 sub render {
-    my ( $self, $tmpl, $args, $to ) = @_;
-    $args ||= +{};
+    my ( $self, $to, $tmpl, @args ) = @_;
 
     my $carrier = Email::Address::JP::Mobile->new($to || 'foo@example.com');
 
-    my @lines = split /\n/, $self->{tiffany}->render( $tmpl, {%$args} );
+    my @lines = split /\n/, $self->{tiffany}->render( $tmpl, @args );
     my @headers;
     while ( @lines > 0 && $lines[0] =~ /^([A-Z][A-Za-z_-]+)\s*:\s*(.+?)$/ ) {
         my ( $key, $val ) = ( $1, $2 );
@@ -37,7 +36,7 @@ sub render {
         body       => $body,
         attributes => {
             content_type => 'text/plain',
-            charset      => 'ISO-2022-JP',
+            charset      => $carrier->send_encoding->mime_name(),
             encoding     => '7bit',
         },
     );
