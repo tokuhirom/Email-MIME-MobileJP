@@ -34,7 +34,7 @@ To も同様に。
 
 ### 画像 part をえる
 
-以下のように、walk_parts というビジターパターンっぽいメソッドであつめましょう。@images の各要素は、パートをあらわす Email::MIME のインスタンスです。
+以下のように、get_parts というメソッドであつめましょう。@images の各要素は、パートをあらわす Email::MIME のインスタンスです。
 
     my $mail = Email::MIME::JPMobile->new($src);
     my @images = $mail->get_parts(qr{^image/jpeg});;
