@@ -41,7 +41,7 @@ To も同様に。
 
 ### SPFの確認
 
-以下のエントリをみよ
+SPF で、本当にケータイからおくられてるかとかチェックできますが、softbank の SPF がくさってるって nekokak がいってたので、あんまり役にたたないかもしれない。@masason どうにかしてください。詳細は以下のサイトをみてください。
 
 http://blog.nekokak.org/show?guid=Vl8eRFxp3xGW08LZob1Swg
 
