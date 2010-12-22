@@ -31,6 +31,12 @@ Email::MIME シリーズをつかって、メールをあつかうのを楽に�
     my $mail = Email::MIME::JPMobile->new($src);
     my @images = $mail->get_parts(qr{^image/jpeg});;
 
+### SPFの確認
+
+以下のエントリをみよ
+
+http://blog.nekokak.org/show?guid=Vl8eRFxp3xGW08LZob1Swg
+
 メールの送信
 ------------
 
