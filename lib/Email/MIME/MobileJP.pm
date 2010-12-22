@@ -28,10 +28,8 @@ sub mail { shift->{mail} }
 
 sub subject {
     my $self = shift;
-    # my $carrier = $self->carrier;
-    # return $carrier ? $carrier->mime_encoding->decode($self->mail->header_obj->header_raw('Subject')) : $self->mail->header('Subject');
-    # MIME-Header-ISO_2022_JP って、encode 専用だったりする?なんか ^^ のコードだと MIME "B" unsupported っていう例外があがってくるよ
-    return $self->mail->header('Subject');
+    my $carrier = $self->carrier;
+    return $carrier && $carrier->is_mobile ? $carrier->mime_encoding->decode($self->mail->header_obj->header_raw('Subject')) : $self->mail->header('Subject');
 }
 
 sub header_raw {
@@ -70,9 +68,12 @@ sub get_texts {
     my ($self, $content_type) = @_;
     $content_type ||= qr{^text/plain};
 
-    # TODO: support parsing utf-8 content
-    my $encoding = $self->carrier->parse_encoding;
-    return map { $encoding->decode($_->body) } $self->get_parts($content_type);
+    if ($self->carrier->is_mobile) {
+        my $encoding = $self->carrier->parse_encoding;
+        return map { $encoding->decode($_->body) } $self->get_parts($content_type);
+    } else {
+        return map { $_->body_str } $self->get_parts($content_type);
+    }
 }
 
 sub get_parts {

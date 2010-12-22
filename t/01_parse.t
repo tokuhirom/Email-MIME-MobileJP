@@ -89,5 +89,28 @@ subtest 'multi part' => sub {
     };
 };
 
+subtest 'UTF-8 mail from PC' => sub {
+    my $src = Email::MIME->create(
+        header => [
+            From => 'foo@example.com',
+            To   => 'to@example.com',
+            Subject => Encode::encode( 'MIME-Header', 'コンニチワ' ),
+        ],
+        attributes => {
+            content_type => 'text/plain',
+            charset      => 'utf-8',
+        },
+        body => encode( 'utf-8', '元気でやってるかー?' ),
+    );
+
+    my $mail = Email::MIME::MobileJP->new($src->as_string);
+
+    is $mail->subject(), 'コンニチワ';
+
+    my @texts = $mail->get_texts();
+    is scalar(@texts), 1;
+    is $texts[0], '元気でやってるかー?';
+};
+
 done_testing;
 
