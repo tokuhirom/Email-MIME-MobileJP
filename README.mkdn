@@ -53,9 +53,7 @@ http://blog.nekokak.org/show?guid=Vl8eRFxp3xGW08LZob1Swg
 Email::MIME->create メソッドをよべば、簡単にメールオブジェクトを作成できます。
 
     use utf8;
-    use Email::MIME;
-    use Encode;
-    use Email::Address::JP::Mobile;
+    use Email::MIME::MobileJP::Creator;
     use Email::Send;
 
     my $to = 'example@ezweb.ne.jp';
