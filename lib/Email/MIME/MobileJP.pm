@@ -39,6 +39,26 @@ sub header_raw {
     $self->mail->header_obj->header_raw(@_);
 }
 
+sub from {
+    my $self = shift;
+
+    my @addr;
+    for my $from ($self->mail->header('From')) {
+        push @addr, Email::Address::Loose->new($from);
+    }
+    return @addr;
+}
+
+sub to {
+    my $self = shift;
+
+    my @addr;
+    for my $to ($self->mail->header('To')) {
+        push @addr, Email::Address::Loose->new($to);
+    }
+    return @addr;
+}
+
 sub carrier {
     my ($self, ) = @_;
     my $from = $self->header('From');
