@@ -43,10 +43,10 @@ Email::MIME::MobileJP::Template - 日本語でメールを送信するときに�
 
 =head1 SYNOPSIS
 
-    use Email::MIME::JPMobile::Template;
+    use Email::MIME::MobileJP::Template;
     use Email::Sender::Simple;
 
-    my $estj = Email::MIME::JPMobile::Template->new(
+    my $estj = Email::MIME::MobileJP::Template->new(
         'Text::Xslate' => {
             syntax => 'TTerse',
             path   => ['./email_tmpl/'],

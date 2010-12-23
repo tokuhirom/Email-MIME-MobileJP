@@ -30,10 +30,10 @@ E-mail まわりの処理をやるためのノウハウをまとめておけば�
 
 メールのパーズは、以下のように、メールの文字列をくわせてやればいいです。
 
-    use Email::MIME::JPMobile::Parser;
+    use Email::MIME::MobileJP::Parser;
 
     my $src_text = do { local $/; <> };
-    my $mail = Email::MIME::JPMobile::Parser->new($src_text);
+    my $mail = Email::MIME::MobileJP::Parser->new($src_text);
 
 メールオブジェクトから Subject をえるには以下のようにしましょう。
 ここでとれるものは MIME ヘッダにはいっている情報をもとに、UTF-8 に decode された文字列です。
@@ -63,7 +63,7 @@ text/html なパートのみがほしい場合には以下のようにします�
 
 以下のように、get_parts というメソッドであつめましょう。@images の各要素は、パートをあらわす Email::MIME のインスタンスです。
 
-    my $mail = Email::MIME::JPMobile->new($src);
+    my $mail = Email::MIME::MobileJP->new($src);
     my @images = $mail->get_parts(qr{^image/jpeg});;
 
 =head3 SPFの確認
@@ -119,9 +119,9 @@ Email::MIME::MobileJP::Creator をつかえば、簡単にメールオブジェ�
     my $sender = Email::Send->new({mailer => 'Sendmail'});
     $sender->send($mail);
 
-=head3 Email::MIME::JPMobile::Template のやつをつかうパターン
+=head3 Email::MIME::MobileJP::Template のやつをつかうパターン
 
-    my $mail_maker = Email::MIME::JPMobile::Template->new('Text::Xslate' => {path => ['email_tmpl/']});
+    my $mail_maker = Email::MIME::MobileJP::Template->new('Text::Xslate' => {path => ['email_tmpl/']});
     my $mail = $mail_maker->render('signup.eml', {token => $token, syntax => 'TTerse'});
     my $sender = Email::Send->new({mailer => 'Sendmail'});
     $sender->send($mail);
