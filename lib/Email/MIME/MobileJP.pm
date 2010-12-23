@@ -36,7 +36,7 @@ E-mail まわりの処理をやるためのノウハウをまとめておけば�
     my $mail = Email::MIME::JPMobile::Parser->new($src_text);
 
 メールオブジェクトから Subject をえるには以下のようにしましょう。
-ここでとれるものは MIME ヘッダにはいっている情報をもとに、utf-8 に decode された文字列です。
+ここでとれるものは MIME ヘッダにはいっている情報をもとに、UTF-8 に decode された文字列です。
 可能ならば絵文字も decode します。これには L<Encode::JP::Mobile> を利用しています。
 
     my $subject = $mail->subject(); # サブジェクトをえる
@@ -51,7 +51,7 @@ To も同様です。
 
 =head3 text part をえる
 
-text/plain な part をすべてえたい場合には以下のようにします。返り値は、utf-8 decode された、文字列の配列です。
+text/plain な part をすべてえたい場合には以下のようにします。返り値は、UTF-8 decode された、文字列の配列です。
 
     my @texts = $mail->get_texts();
 

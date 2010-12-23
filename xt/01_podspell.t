@@ -34,3 +34,8 @@ API
 URL
 URI
 db
+nekokak
+SPF
+au
+Str
+UTF
