@@ -79,6 +79,8 @@ sub get_parts {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Email::MIME::MobileJP::Parser - E-Mail parser toolkit for Japanese mobile phones(based on Email::MIME)
