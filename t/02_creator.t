@@ -7,24 +7,24 @@ use Encode ();
 
 subtest 'single part(docomo)' => sub {
     my $creator = Email::MIME::MobileJP::Creator->new('docomo.taro.@docomo.ne.jp');
-    is $creator->to(), 'docomo.taro.@docomo.ne.jp';
+    is $creator->header('To'), 'docomo.taro.@docomo.ne.jp';
     $creator->subject('こんにちわ!');
     $creator->body('ほげほげ');
 
     is $creator->subject(), 'こんにちわ!';
     is $creator->body(), 'ほげほげ';
-    is $creator->content_type(), 'text/plain; charset="Shift_JIS"';
+    is $creator->mail->content_type(), 'text/plain; charset="Shift_JIS"';
 
     my $mail = $creator->finalize();
     my $str = $mail->as_string;
     ok !Encode::is_utf8($str);
     like $str, qr{\QSubject: =?SHIFT_JIS?B?grGC8YLJgr+C7SE=?=};
-    diag $str;
+    note $str;
 };
 
 subtest 'single part(ezweb)' => sub {
     my $creator = Email::MIME::MobileJP::Creator->new('example@ezweb.ne.jp');
-    is $creator->to(), 'example@ezweb.ne.jp';
+    is $creator->header('To'), 'example@ezweb.ne.jp';
     $creator->subject('こんにちわ!');
     $creator->body('ほげほげ');
     isa_ok $creator->carrier, 'Email::Address::JP::Mobile::EZweb';
@@ -33,7 +33,7 @@ subtest 'single part(ezweb)' => sub {
 
     is $creator->subject(), 'こんにちわ!';
     is $creator->body(), 'ほげほげ';
-    is $creator->content_type(), 'text/plain; charset="Shift_JIS"';
+    is $creator->mail->content_type(), 'text/plain; charset="Shift_JIS"';
 
     my $mail = $creator->finalize();
     my $str = $mail->as_string;
@@ -43,11 +43,11 @@ subtest 'single part(ezweb)' => sub {
 
 subtest 'multi part' => sub {
     my $creator = Email::MIME::MobileJP::Creator->new('docomo.taro.@docomo.ne.jp');
-    is $creator->to(), 'docomo.taro.@docomo.ne.jp';
+    is $creator->header('To'), 'docomo.taro.@docomo.ne.jp';
     $creator->subject('こんにちわ!');
 
     is $creator->subject(), 'こんにちわ!';
-    is $creator->content_type(), 'text/plain; charset="Shift_JIS"';
+    is $creator->mail->content_type(), 'text/plain; charset="Shift_JIS"';
 
     $creator->add_text_part('ほげほげ');
     $creator->add_part(

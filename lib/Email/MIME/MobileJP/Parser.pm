@@ -6,7 +6,6 @@ use utf8;
 use Email::MIME;
 use Email::Address::JP::Mobile;
 use Email::Address::Loose -override;
-use Encode::MIME::Header::ISO_2022_JP;
 use Carp ();
 
 sub new {
@@ -23,19 +22,13 @@ sub subject {
     return $carrier && $carrier->is_mobile ? $carrier->mime_encoding->decode($self->mail->header_obj->header_raw('Subject')) : $self->mail->header('Subject');
 }
 
-sub header_raw {
-    my $self = shift;
-    $self->mail->header_obj->header_raw(@_);
-}
-
 sub from {
     my $self = shift;
 
-    my @addr;
-    for my $from ($self->mail->header('From')) {
-        push @addr, Email::Address::Loose->new($from);
-    }
-    return @addr;
+    my ($from) = $self->mail->header('From');
+    return unless $from;
+    my ($addr) = Email::Address::Loose->parse($from);
+    return $addr;
 }
 
 sub to {
@@ -43,7 +36,7 @@ sub to {
 
     my @addr;
     for my $to ($self->mail->header('To')) {
-        push @addr, Email::Address::Loose->new($to);
+        push @addr, Email::Address::Loose->parse($to);
     }
     return @addr;
 }
@@ -92,7 +85,7 @@ Email::MIME::MobileJP::Parser - E-Mail parser toolkit for Japanese mobile phones
 
 =head1 SYNOPSIS
 
-    my $mail = Email::MIMM::MobileJP::Parser->new($mail_txt);
+    my $mail = Email::MIME::MobileJP::Parser->new($mail_txt);
 
 =head1 DESCRIPTION
 
@@ -101,6 +94,42 @@ This is a E-Mail parser toolkit for Japanese mobile phones.
 =head1 METHODS
 
 =over 4
+
+=item my $mail = Email::MIME::MobileJP::Parser->new($mail_txt);
+
+The constructor です。メールの text をわたしてください。
+
+=item my $mime = $mail->mail();
+
+L<Email::MIME> のインスタンスそのものをえます。こまかい処理がやりたくて Email::MIME::MobileJP::Parser では不十分なときなどによんでください。
+
+=item my $subject = $mail->subject();
+
+Subject をかえします。L<Encode::JP::Mobile> を利用し、可能なら絵文字も decode します。現時点では絵文字は au の場合のみ decode 可能です(キャリア側の制限によります)。
+
+=item my $from = $mail->from();
+
+From ヘッダを解析し、L<Email::Address::Loose> のオブジェクトをかえします。
+
+=item my ($to) = $mail->to();
+
+To ヘッダを解析し、L<Email::Address::Loose> の配列でかえします。
+
+=item my $carrier = $mail->carrier();
+
+From よりもとめた L<Email::Address::JP::Mobile> のインスタンスをかえします。
+
+=item my @texts = $mail->get_texts([$content_type]);
+
+メールにふくまれるテキストを配列でかえします。$content_type は正規表現で指定します。デフォルトは qr{^text/plain} です。
+返り値は適切なエンコーディングで decode されます。
+
+=item my @parts = $mail->get_parts($content_type : Regexp)
+
+$content_type にマッチする Content-Type を含むパートの配列をかえします。各要素は L<Email::MIME> のインスタンスです。
+たいていの場合は C<<< $parts[0]->content_type >>> と C<<< $parts[0]->body >>> そして C<<< $parts[0]->filename >>> をしっておけばことたりるでしょう。
+
+このメソッドは、メールに添付されている画像を取得したい、などという場合に有用でしょう。
 
 =back
 

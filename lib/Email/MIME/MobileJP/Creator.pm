@@ -2,13 +2,18 @@ package Email::MIME::MobileJP::Creator;
 use strict;
 use warnings;
 use utf8;
+
 use Email::MIME;
 use Email::Address::JP::Mobile;
+use Email::Address::Loose -override;
+use Carp ();
 
 sub new {
     my ($class, $to) = @_;
+    Carp::croak("missing To") unless defined $to;
+
     my $mail = Email::MIME->create();
-    my $carrier = Email::Address::JP::Mobile->new($to || 'foo@example.com');
+    my $carrier = Email::Address::JP::Mobile->new($to);
     my $self = bless { mail => $mail, carrier => $carrier }, $class;
     if ($to) {
         $self->header('To' => $to);
@@ -24,9 +29,6 @@ sub subject {
     my $self = shift;
     $self->header('Subject' => @_);
 }
-
-sub to { shift->header( 'To' => @_ ) }
-sub content_type { shift->mail->content_type(@_) }
 
 sub body {
     my $self = shift;
@@ -78,4 +80,68 @@ sub finalize {
 }
 
 1;
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Email::MIME::MobileJP::Creator - E-mail creator for Japanese mobile phones
+
+=head1 METHODS
+
+=over 4
+
+=item my $creator = Email::MIME::MobileJP::Creator->new($to: Str);
+
+EmaiL::MIME::MobileJP::Creator のインスタンスをつくります。
+
+I<Args:> $to: To ヘッダの中身
+
+I<Return:> Email::MIME::MobileJP::Creator のインスタンス
+
+=item my $mail = $creator->mail();
+
+L<Email::MIME> のインスタンスをえます。直接こまかい操作をしたい場合によんでください。
+
+=item my $carrier = $creator->carrier();
+
+L<Email::Address::JP::Mobile> のインスタンスをえます。キャリヤ判定をおこないたい場合に利用してください。
+
+=item $creator->subject($subject :Str);
+
+Subject ヘッダを設定します。
+
+=item $creator->body($body :Str);
+
+本文を指定します。
+
+=item $creator->header($key => $value);
+
+任意のヘッダを設定します。
+
+=item $creator->add_part($content => \%attr);
+
+任意のコンテンツを添付します。使用法は以下のとおり。
+
+    $creator->add_part(
+        $content => {
+            filename     => "report.pdf",
+            content_type => "application/pdf",
+            encoding     => "quoted−printable",
+            name         => "2004−financials.pdf",
+        },
+    );
+
+=item $creator->add_text_part($content[, \%attr]);
+
+text パートを追加します。$content は送信先にあった encoding で自動的に encode されます。
+Content-Type をかえたい場合などは、add_part と同様に %attr を指定してください。
+
+=item my $mail = $creator->finalize();
+
+後処理をおこない、完成した Email::MIME のインスタンスをかえします。
+
+=back
+
 

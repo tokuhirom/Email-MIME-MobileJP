@@ -112,5 +112,37 @@ subtest 'UTF-8 mail from PC' => sub {
     is $texts[0], '元気でやってるかー?';
 };
 
+subtest 'from/to' => sub {
+    my $src = Email::MIME->create(
+        header => [
+            From => 'tomi...@docomo.ne.jp',
+            To   => 'to@example.com',
+            To   => 'to2@example.com',
+            Subject => Encode::encode( 'MIME-Header-ISO_2022_JP', 'コンニチワ' ),
+        ],
+        attributes => {
+            content_type => 'text/plain',
+            charset      => 'iso-2022-jp',
+        },
+        body => encode( 'iso-2022-jp', '元気でやってるかー?' ),
+    );
+
+    my $mail = Email::MIME::MobileJP::Parser->new($src->as_string);
+    subtest 'from' => sub {
+        my $from = $mail->from();
+        isa_ok $from, 'Email::Address';
+        is $from->address, 'tomi...@docomo.ne.jp';
+        is "$from", 'tomi...@docomo.ne.jp';
+    };
+    subtest 'to' => sub {
+        my @to = $mail->to();
+        is scalar(@to), 2;
+        isa_ok $to[0], 'Email::Address';
+        is $to[0]->address, 'to@example.com';
+        is "$to[0]", 'to@example.com';
+        is "$to[1]", 'to2@example.com';
+    };
+};
+
 done_testing;
 
