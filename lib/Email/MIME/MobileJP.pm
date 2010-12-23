@@ -14,11 +14,9 @@ __END__
 
 Email::MIME::MobileJP - E-mail toolkit for Japanese Mobile Phones
 
-=head1 SYNOPSIS
-
-  use Email::MIME::MobileJP;
-
 =head1 DESCRIPTION
+
+B<WARNING! THIS MODULE IS IN THE BETA QUALITY. API MAY CHANGE WITHOUT NOTICE!>
 
 Email::MIME::MobileJP is all in one E-mail toolkit for Japanese mobile phones.
 

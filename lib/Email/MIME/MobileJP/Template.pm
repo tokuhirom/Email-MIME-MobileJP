@@ -44,7 +44,7 @@ Email::MIME::JPMobile::Template - 日本語でメールを送信するときに�
 =head1 SYNOPSIS
 
     use Email::MIME::JPMobile::Template;
-    use Email::Sender::Simple qw/sendmail/;
+    use Email::Sender::Simple;
 
     my $estj = Email::MIME::JPMobile::Template->new(
         'Text::Xslate' => {
@@ -53,7 +53,7 @@ Email::MIME::JPMobile::Template - 日本語でメールを送信するときに�
         },
     );
     my $email = $estj->render('foo.eml', {token => $token});
-    sendmail($email);
+    Email::Sender::Simple->send($email);
 
 =head1 DESCRIPTION
 
