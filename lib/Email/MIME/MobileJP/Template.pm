@@ -39,7 +39,7 @@ __END__
 
 =head1 NAME
 
-Email::MIME::JPMobile::Template - 日本語でメールを送信するときに楽するライブラリ
+Email::MIME::MobileJP::Template - 日本語でメールを送信するときに楽するライブラリ
 
 =head1 SYNOPSIS
 
