@@ -4,9 +4,7 @@ use warnings;
 use utf8;
 
 use Tiffany;
-use Encode ();
-use Email::MIME;
-use Email::Date::Format;
+use Email::MIME::MobileJP::Creator;
 
 sub new {
     my ( $class, $name, $args ) = @_;
@@ -16,30 +14,22 @@ sub new {
 
 sub render {
     my ( $self, $to, $tmpl, @args ) = @_;
+    Carp::croak('Usage: $tmpl->render($to, $tmpl[, @args])') unless defined $tmpl;
 
-    my $carrier = Email::Address::JP::Mobile->new($to || 'foo@example.com');
+    my $creator = Email::MIME::MobileJP::Creator->new($to);
 
     my @lines = split /\n/, $self->{tiffany}->render( $tmpl, @args );
-    my @headers;
     while ( @lines > 0 && $lines[0] =~ /^([A-Z][A-Za-z_-]+)\s*:\s*(.+?)$/ ) {
         my ( $key, $val ) = ( $1, $2 );
-        push @headers, $key, $carrier->mime_encoding->encode( $val );
+        $creator->header($key, $val);
         shift @lines;
     }
     if ( @lines > 0 && $lines[0] =~ /^\s*$/ ) {
         shift @lines;
     }
-    my $body = $carrier->send_encoding->encode( join( "\n", @lines );
+    $creator->body( join( "\n", @lines) );
 
-    return Email::MIME->create(
-        header     => @headers ? \@headers : [Date => Email::Date::Format::email_date()],
-        body       => $body,
-        attributes => {
-            content_type => 'text/plain',
-            charset      => $carrier->send_encoding->mime_name(),
-            encoding     => '7bit',
-        },
-    );
+    return $creator->finalize();
 }
 
 1;
