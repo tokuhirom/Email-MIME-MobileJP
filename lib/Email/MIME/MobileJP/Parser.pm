@@ -4,7 +4,7 @@ use warnings;
 use utf8;
 
 use Email::MIME;
-use Email::Address::JP::Mobile;
+use Email::Address::JP::Mobile; # provides Email::Address->carrier() method for carrier detection.
 use Email::Address::Loose -override;
 use Carp ();
 
@@ -25,10 +25,12 @@ sub subject {
 sub from {
     my $self = shift;
 
-    my ($from) = $self->mail->header('From');
-    return unless $from;
-    my ($addr) = Email::Address::Loose->parse($from);
-    return $addr;
+    $self->{__jpmobile_from} ||= do {
+        my ($from) = $self->mail->header('From');
+        return unless $from;
+        my ($addr) = Email::Address::Loose->parse($from);
+        return $addr;
+    };
 }
 
 sub to {
@@ -43,9 +45,9 @@ sub to {
 
 sub carrier {
     my ($self, ) = @_;
-    my $from = $self->mail->header('From');
+    my $from = $self->from;
     Carp::croak("Missing 'From' field in headers") unless $from;
-    return $self->{__jpmobile_from} ||= Email::Address::JP::Mobile->new($from);
+    return $from->carrier();
 }
 
 sub get_texts {
