@@ -1,21 +1,15 @@
 .gitignore
+Build.PL
 Changes
-inc/Module/Install.pm
-inc/Module/Install/AuthorTests.pm
-inc/Module/Install/Base.pm
-inc/Module/Install/Can.pm
-inc/Module/Install/Fetch.pm
-inc/Module/Install/Makefile.pm
-inc/Module/Install/Metadata.pm
-inc/Module/Install/Win32.pm
-inc/Module/Install/WriteAll.pm
 lib/Email/MIME/MobileJP.pm
 lib/Email/MIME/MobileJP/Creator.pm
 lib/Email/MIME/MobileJP/Parser.pm
 lib/Email/MIME/MobileJP/Template.pm
-Makefile.PL
+LICENSE
 MANIFEST			This list of files
+META.json
 META.yml
+README
 t/00_compile.t
 t/01_parse.t
 t/02_creator.t
@@ -24,4 +18,6 @@ t/tmpl/foo.eml
 xt/01_podspell.t
 xt/02_perlcritic.t
 xt/03_pod.t
-xt/perlcriticrc
+xt/04_minimum_version.t
+xt/05_cpan_meta.t
+xt/06_meta_author.t

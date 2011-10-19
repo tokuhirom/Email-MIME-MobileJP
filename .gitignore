@@ -9,3 +9,11 @@ Build
 _build/
 xshelper.h
 tags
+pm_to_blib
+blib/
+META.yml
+MYMETA.*
+META.json
+META.yml
+README
+Email-MIME-MobileJP-*/

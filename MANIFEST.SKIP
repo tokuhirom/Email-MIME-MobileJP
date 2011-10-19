@@ -26,3 +26,10 @@ nytprof
 perltidy.ERR$
 ^tags$
 ^README.pod$
+^README.mkdn$
+^MYMETA\.
+\b_build
+^MANIFEST\.SKIP
+\b\.gitignore
+\.bak$
+^Email-MIME-MobileJP-
