@@ -1,5 +1,9 @@
 Revision history for Perl extension Email::MIME::MobileJP
 
+0.06
+
+    - re-packaging
+
 0.05
 
         - performance tuning
