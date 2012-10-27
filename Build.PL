@@ -20,7 +20,8 @@ my $build = Module::Build->new(
         'Email::Address::Loose'      => '0.01',
         'Tiffany'                    => '0.03',
         'Encode'                     => '2.4',
-        'Email::Address'             => '1.892'
+        'Email::Address'             => '1.892',
+        'Devel::Peek'                => 0,
     },
     no_index    => { 'directory' => [ 't', 'inc' ] },
     name        => 'Email-MIME-MobileJP',

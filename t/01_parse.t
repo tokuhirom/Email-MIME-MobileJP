@@ -6,6 +6,7 @@ use Email::MIME::MobileJP::Parser;
 use Email::MIME;
 use Encode;
 use MIME::Base64;
+use Devel::Peek;
 
 subtest 'single part' => sub {
     my $src = Email::MIME->create(
@@ -76,7 +77,10 @@ subtest 'multi part' => sub {
     subtest 'get_texts' => sub {
         my @texts = $mail->get_texts();
         is scalar(@texts), 1;
-        is $texts[0], "やっほ\n";
+        is($texts[0], "やっほ\n") or do {
+            Dump($texts[0]);
+            Dump("やっほ\n");
+        };
         ok Encode::is_utf8($texts[0]);
     };
 
