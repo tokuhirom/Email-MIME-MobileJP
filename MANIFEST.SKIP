@@ -33,3 +33,6 @@ perltidy.ERR$
 \b\.gitignore
 \.bak$
 ^Email-MIME-MobileJP-
+^[^/]+\.gz$
+(\b|\A)\.gitignore
+^inc/

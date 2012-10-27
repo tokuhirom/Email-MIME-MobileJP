@@ -17,3 +17,4 @@ META.json
 META.yml
 README
 Email-MIME-MobileJP-*/
+^inc/
