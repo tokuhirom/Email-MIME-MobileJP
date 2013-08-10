@@ -92,7 +92,7 @@ Email::MIME::MobileJP::Creator - E-mail creator for Japanese mobile phones
 
 =over 4
 
-=item my $creator = Email::MIME::MobileJP::Creator->new($to: Str);
+=item C<< my $creator = Email::MIME::MobileJP::Creator->new($to: Str); >>
 
 EmaiL::MIME::MobileJP::Creator のインスタンスをつくります。
 
@@ -100,27 +100,27 @@ I<Args:> $to: To ヘッダの中身
 
 I<Return:> Email::MIME::MobileJP::Creator のインスタンス
 
-=item my $mail = $creator->mail();
+=item C<< my $mail = $creator->mail(); >>
 
 L<Email::MIME> のインスタンスをえます。直接こまかい操作をしたい場合によんでください。
 
-=item my $carrier = $creator->carrier();
+=item C<< my $carrier = $creator->carrier(); >>
 
 L<Email::Address::JP::Mobile> のインスタンスをえます。キャリヤ判定をおこないたい場合に利用してください。
 
-=item $creator->subject($subject :Str);
+=item C<< $creator->subject($subject :Str); >>
 
 Subject ヘッダを設定します。
 
-=item $creator->body($body :Str);
+=item C<< $creator->body($body :Str); >>
 
 本文を指定します。
 
-=item $creator->header($key => $value);
+=item C<< $creator->header($key => $value); >>
 
 任意のヘッダを設定します。
 
-=item $creator->add_part($content => \%attr);
+=item C<< $creator->add_part($content => \%attr); >>
 
 任意のコンテンツを添付します。使用法は以下のとおり。
 
@@ -133,12 +133,12 @@ Subject ヘッダを設定します。
         },
     );
 
-=item $creator->add_text_part($content[, \%attr]);
+=item C<< $creator->add_text_part($content[, \%attr]); >>
 
 text パートを追加します。$content は送信先にあった encoding で自動的に encode されます。
 Content-Type をかえたい場合などは、add_part と同様に %attr を指定してください。
 
-=item my $mail = $creator->finalize();
+=item C<< my $mail = $creator->finalize(); >>
 
 後処理をおこない、完成した Email::MIME のインスタンスをかえします。
 

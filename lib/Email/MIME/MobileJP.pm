@@ -8,6 +8,8 @@ our $VERSION = '0.07';
 1;
 __END__
 
+=for stopwords softbank
+
 =encoding utf8
 
 =head1 NAME
