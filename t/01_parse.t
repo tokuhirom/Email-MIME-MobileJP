@@ -77,9 +77,9 @@ subtest 'multi part' => sub {
     subtest 'get_texts' => sub {
         my @texts = $mail->get_texts();
         is scalar(@texts), 1;
-        is($texts[0], "やっほ\n") or do {
+        is($texts[0], "やっほ") or do {
             Dump($texts[0]);
-            Dump("やっほ\n");
+            Dump("やっほ");
         };
         ok Encode::is_utf8($texts[0]);
     };
