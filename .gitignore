@@ -13,8 +13,14 @@ pm_to_blib
 blib/
 META.yml
 MYMETA.*
-META.json
 META.yml
 README
 Email-MIME-MobileJP-*/
 ^inc/
+/Email-MIME-MobileJP-*
+/.build
+/_build_params
+/Build
+!Build/
+!META.json
+!LICENSE

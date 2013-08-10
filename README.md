@@ -1,22 +1,10 @@
-package Email::MIME::MobileJP;
-use strict;
-use warnings;
-use 5.008001;
-our $VERSION = '0.03';
-
-
-1;
-__END__
-
-=encoding utf8
-
-=head1 NAME
+# NAME
 
 Email::MIME::MobileJP - E-mail toolkit for Japanese Mobile Phones
 
-=head1 DESCRIPTION
+# DESCRIPTION
 
-B<WARNING! THIS MODULE IS IN THE BETA QUALITY. API MAY CHANGE WITHOUT NOTICE!>
+__WARNING! THIS MODULE IS IN THE BETA QUALITY. API MAY CHANGE WITHOUT NOTICE!__
 
 Email::MIME::MobileJP is all in one E-mail toolkit for Japanese mobile phones.
 
@@ -24,9 +12,9 @@ Email::MIME::MobileJP is all in one E-mail toolkit for Japanese mobile phones.
 
 E-mail まわりの処理をやるためのノウハウをまとめておけば、後々、お気楽にできるはずということです。
 
-=head1 クックブック
+# クックブック
 
-=head2 メールの受信(Parsing)
+## メールの受信(Parsing)
 
 メールのパーズは、以下のように、メールの文字列をくわせてやればいいです。
 
@@ -37,11 +25,11 @@ E-mail まわりの処理をやるためのノウハウをまとめておけば�
 
 メールオブジェクトから Subject をえるには以下のようにしましょう。
 ここでとれるものは MIME ヘッダにはいっている情報をもとに、UTF-8 に decode された文字列です。
-可能ならば絵文字も decode します。これには L<Encode::JP::Mobile> を利用しています。
+可能ならば絵文字も decode します。これには [Encode::JP::Mobile](http://search.cpan.org/perldoc?Encode::JP::Mobile) を利用しています。
 
     my $subject = $mail->subject(); # サブジェクトをえる
 
-From をえるには以下のようにします。各要素は L<Email::Address::Loose> のインスタンスです。
+From をえるには以下のようにします。各要素は [Email::Address::Loose](http://search.cpan.org/perldoc?Email::Address::Loose) のインスタンスです。
 
     my ($from) = $mail->from();
 
@@ -49,7 +37,7 @@ To も同様です。
 
     my ($to) = $mail->to();
 
-=head3 text part をえる
+### text part をえる
 
 text/plain な part をすべてえたい場合には以下のようにします。返り値は、UTF-8 decode された、文字列の配列です。
 
@@ -59,22 +47,22 @@ text/html なパートのみがほしい場合には以下のようにします�
 
     my @texts = $mail->get_texts(qr{^text/html});
 
-=head3 画像 part をえる
+### 画像 part をえる
 
-以下のように、get_parts というメソッドであつめましょう。@images の各要素は、パートをあらわす Email::MIME のインスタンスです。
+以下のように、get\_parts というメソッドであつめましょう。@images の各要素は、パートをあらわす Email::MIME のインスタンスです。
 
     my $mail = Email::MIME::MobileJP->new($src);
     my @images = $mail->get_parts(qr{^image/jpeg});;
 
-=head3 SPFの確認
+### SPFの確認
 
 SPF で、本当にケータイからおくられてるかとかチェックできますが、softbank の SPF がくさってるって nekokak がいってたので、あんまり役にたたないかもしれない。@masason どうにかしてください。詳細は以下のサイトをみてください。
 
 http://blog.nekokak.org/show?guid=Vl8eRFxp3xGW08LZob1Swg
 
-=head2 メールの送信
+## メールの送信
 
-=head3 メールオブジェクトを作成する
+### メールオブジェクトを作成する
 
 Email::MIME::MobileJP::Creator をつかえば、簡単にメールオブジェクトを作成できます。
 
@@ -93,7 +81,7 @@ Email::MIME::MobileJP::Creator をつかえば、簡単にメールオブジェ�
     my $sender = Email::Send->new({mailer => 'Sendmail'});
     $sender->send($mail);
 
-=head3 添付したい場合
+### 添付したい場合
 
 マルチパートで写真などを添付したい場合には以下のようにすればよいでしょう。
 
@@ -119,14 +107,14 @@ Email::MIME::MobileJP::Creator をつかえば、簡単にメールオブジェ�
     my $sender = Email::Send->new({mailer => 'Sendmail'});
     $sender->send($mail);
 
-=head3 Email::MIME::MobileJP::Template のやつをつかうパターン
+### Email::MIME::MobileJP::Template のやつをつかうパターン
 
     my $mail_maker = Email::MIME::MobileJP::Template->new('Text::Xslate' => {path => ['email_tmpl/']});
     my $mail = $mail_maker->render('signup.eml', {token => $token, syntax => 'TTerse'});
     my $sender = Email::Send->new({mailer => 'Sendmail'});
     $sender->send($mail);
 
-ただしここで email_tmpl/signup.eml の中身は、以下のとおり。
+ただしここで email\_tmpl/signup.eml の中身は、以下のとおり。
 
     Subject: [Example] サインアップ!
 
@@ -135,17 +123,15 @@ Email::MIME::MobileJP::Creator をつかえば、簡単にメールオブジェ�
 
 こういうテンプレをおいておけば、簡単にメールを送信できるのでたいへんべんりですね。
 
-=head1 AUTHOR
+# AUTHOR
 
-Tokuhiro Matsuno E<lt>tokuhirom AAJKLFJEF GMAIL COME<gt>
+Tokuhiro Matsuno <tokuhirom AAJKLFJEF@ GMAIL COM>
 
-=head1 SEE ALSO
+# SEE ALSO
 
-=head1 LICENSE
+# LICENSE
 
 Copyright (C) Tokuhiro Matsuno
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
-
-=cut

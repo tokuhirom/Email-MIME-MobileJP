@@ -1,0 +1,81 @@
+{
+   "abstract" : "E-mail toolkit for Japanese Mobile Phones",
+   "author" : [
+      "Tokuhiro Matsuno <tokuhirom AAJKLFJEF@ GMAIL COM>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Minilla/v0.5.6, CPAN::Meta::Converter version 2.131560",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Email-MIME-MobileJP",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "Test::More" : "0.98",
+            "Test::Requires" : "0"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "CPAN::Meta" : "0",
+            "CPAN::Meta::Prereqs" : "0",
+            "Module::Build" : "0.38"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion" : "0.10108",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Devel::Peek" : "0",
+            "Email::Address" : "1.892",
+            "Email::Address::JP::Mobile" : "0.05",
+            "Email::Address::Loose" : "0.01",
+            "Email::MIME" : "1.923",
+            "Encode" : "2.4",
+            "Encode::JP::Mobile" : "0.27",
+            "Tiffany" : "0.03",
+            "parent" : "0",
+            "perl" : "5.008001"
+         }
+      }
+   },
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/tokuhirom/Email-MIME-MobileJP/issues"
+      },
+      "homepage" : "https://github.com/tokuhirom/Email-MIME-MobileJP",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/tokuhirom/Email-MIME-MobileJP.git",
+         "web" : "https://github.com/tokuhirom/Email-MIME-MobileJP"
+      }
+   },
+   "version" : "0.07",
+   "x_contributors" : [
+      "Uchiko <memememomo@gmail.com>",
+      "tokuhirom <tokuhirom@gmail.com>"
+   ]
+}
