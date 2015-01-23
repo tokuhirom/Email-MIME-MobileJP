@@ -4,7 +4,7 @@ Email::MIME::MobileJP - E-mail toolkit for Japanese Mobile Phones
 
 # DESCRIPTION
 
-__WARNING! THIS MODULE IS IN THE BETA QUALITY. API MAY CHANGE WITHOUT NOTICE!__
+**WARNING! THIS MODULE IS IN THE BETA QUALITY. API MAY CHANGE WITHOUT NOTICE!**
 
 Email::MIME::MobileJP is all in one E-mail toolkit for Japanese mobile phones.
 
@@ -25,11 +25,11 @@ E-mail まわりの処理をやるためのノウハウをまとめておけば�
 
 メールオブジェクトから Subject をえるには以下のようにしましょう。
 ここでとれるものは MIME ヘッダにはいっている情報をもとに、UTF-8 に decode された文字列です。
-可能ならば絵文字も decode します。これには [Encode::JP::Mobile](http://search.cpan.org/perldoc?Encode::JP::Mobile) を利用しています。
+可能ならば絵文字も decode します。これには [Encode::JP::Mobile](https://metacpan.org/pod/Encode::JP::Mobile) を利用しています。
 
     my $subject = $mail->subject(); # サブジェクトをえる
 
-From をえるには以下のようにします。各要素は [Email::Address::Loose](http://search.cpan.org/perldoc?Email::Address::Loose) のインスタンスです。
+From をえるには以下のようにします。各要素は [Email::Address::Loose](https://metacpan.org/pod/Email::Address::Loose) のインスタンスです。
 
     my ($from) = $mail->from();
 

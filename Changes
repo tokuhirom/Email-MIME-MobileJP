@@ -2,6 +2,14 @@ Revision history for Perl extension Email::MIME::MobileJP
 
 {{$NEXT}}
 
+0.08 2015-01-23T05:17:14Z
+
+    commit 96c15c15b161db8d0f450d9c5379cd4aa65da60e
+    Author: tanaka <banchou@peixe.biz>
+    Date:   Fri Jan 23 09:21:41 2015 +0900
+
+        docomo, softbankの場合decode方法を変更
+
 0.07 2013-08-10T03:08:30Z
 
     Author: Uchiko <memememomo@gmail.com>
