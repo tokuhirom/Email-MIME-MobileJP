@@ -56,7 +56,18 @@ sub get_texts {
 
     if ($self->carrier->is_mobile) {
         my $encoding = $self->carrier->parse_encoding;
-        return map { $encoding->decode($_->body) } $self->get_parts($content_type);
+
+		return map {
+			my $enc="utf-8";
+			if( $_->content_type =~/utf-8/i ){
+				$enc="utf-8";
+			}elsif( $_->content_type =~/iso-2022-jp/i ){
+				$enc="iso-2022-jp";
+			}elsif( $_->content_type =~/shift[-_]jis/i ){
+				$enc="shift_jis";
+			}
+			Encode::decode($enc, $_->body);
+		} $self->get_parts($content_type);
     } else {
         return map { $_->body_str } $self->get_parts($content_type);
     }
